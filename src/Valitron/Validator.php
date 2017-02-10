@@ -77,6 +77,7 @@ class Validator
      */
     protected $validUrlPrefixes = array('http://', 'https://', 'ftp://');
 
+    protected $rules;
     /**
      * Setup validation
      *
@@ -106,6 +107,8 @@ class Validator
         } else {
             throw new \InvalidArgumentException("Fail to load language file '" . $langFile . "'");
         }
+
+        $this->rules = new RulesCollection();
     }
 
     /**
@@ -476,17 +479,6 @@ class Validator
         return filter_var($value, \FILTER_VALIDATE_IP) !== false;
     }
 
-    /**
-     * Validate that a field is a valid e-mail address
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @return bool
-     */
-    protected function validateEmail($field, $value)
-    {
-        return filter_var($value, \FILTER_VALIDATE_EMAIL) !== false;
-    }
 
     /**
      * Validate that a field is a valid URL by syntax
@@ -936,13 +928,16 @@ class Validator
                 }
 
                 // Callback is user-specified or assumed method on class
-                $errors = $this->getRules();
-                if (isset($errors[$v['rule']])) {
-                    $callback = $errors[$v['rule']];
+                if ($this->rules->hasRule($v['rule'])){
+                    $callback = array($this->rules->getRule($v['rule']), 'validate');
                 } else {
-                    $callback = array($this, 'validate' . ucfirst($v['rule']));
+                    $errors = $this->getRules();
+                    if (isset($errors[$v['rule']])) {
+                        $callback = $errors[$v['rule']];
+                    } else {
+                        $callback = array($this, 'validate' . ucfirst($v['rule']));
+                    }
                 }
-
                 if (!$multiple) {
                     $values = array($values);
                 }
@@ -1067,7 +1062,7 @@ class Validator
     }
 
     /**
-     * Returns true if either a valdiator with the given name has been
+     * Returns true if either a validator with the given name has been
      * registered or there is a default validator by that name.
      *
      * @param string    $name
@@ -1075,9 +1070,9 @@ class Validator
      */
     public function hasValidator($name)
     {
+
         $rules = $this->getRules();
-        return method_exists($this, "validate" . ucfirst($name))
-            || isset($rules[$name]);
+        return method_exists($this, "validate" . ucfirst($name)) || isset($rules[$name]);
     }
 
     /**
@@ -1103,7 +1098,7 @@ class Validator
         }
 
         $errors = $this->getRules();
-        if (!isset($errors[$rule])) {
+        if (!isset($errors[$rule]) && !  $this->rules->hasRule($rule)) {
             $ruleMethod = 'validate' . ucfirst($rule);
             if (!method_exists($this, $ruleMethod)) {
                 throw new \InvalidArgumentException("Rule '" . $rule . "' has not been registered with " . __CLASS__ . "::addRule().");

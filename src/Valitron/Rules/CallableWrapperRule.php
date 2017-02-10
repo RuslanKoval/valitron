@@ -6,6 +6,12 @@ namespace Valitron\Rules;
 
 use Valitron\RuleInterface;
 
+/**
+ * Wraps a callable
+ *
+ * Class CallableWrapperRule
+ * @package Valitron\Rules
+ */
 class CallableWrapperRule implements RuleInterface
 {
 

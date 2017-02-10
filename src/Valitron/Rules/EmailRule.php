@@ -6,6 +6,12 @@ namespace Valitron\Rules;
 
 use Valitron\RuleInterface;
 
+/**
+ * Validate that a field is a valid e-mail address
+ *
+ * Class EmailRule
+ * @package Valitron\Rules
+ */
 class EmailRule implements RuleInterface
 {
 

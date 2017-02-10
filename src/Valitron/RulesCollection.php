@@ -9,7 +9,11 @@ use Valitron\Exception\ValitronException;
 class RulesCollection implements RulesCollectionInterface
 {
 
-    private $rules = [];
+    private $rules = [
+        'email'=>'\Valitron\Rules\EmailRule'
+    ];
+
+
 
     /**
      * Add a rule
