@@ -10,12 +10,23 @@ class RulesCollection implements RulesCollectionInterface
 {
 
     private $rules = array(
-        //numeric
+
+        //number
         'min' => '\Valitron\Rules\MinRule',
         'max' => '\Valitron\Rules\MaxRule',
         'between' => '\Valitron\Rules\BetweenRule',
         //string
-        'email' => '\Valitron\Rules\EmailRule'
+        'email' => '\Valitron\Rules\EmailRule',
+        'creditcard' => '\Valitron\Rules\CreditCardRule',
+        //date
+        'date' => '\Valitron\Rules\DateRule',
+        'dateformat' => '\Valitron\Rules\DateFormatRule',
+        'datebefore' => '\Valitron\Rules\DateBeforeRule',
+        'dateafter' => '\Valitron\Rules\DateAfterRule',
+        //misc
+        'optional' => '\Valitron\Rules\OptionalRule',
+        'instanceof' => '\Valitron\Rules\InstanceOfRule',
+        'boolean' => '\Valitron\Rules\BooleanRule',
     );
 
 
@@ -30,6 +41,7 @@ class RulesCollection implements RulesCollectionInterface
      */
     public function addRule($name, $implementation)
     {
+        $name = strtolower($name);
         if ($this->hasRule($name)) {
             throw ValitronException::ruleExists($name);
         }
@@ -48,6 +60,7 @@ class RulesCollection implements RulesCollectionInterface
      */
     public function hasRule($name)
     {
+        $name = strtolower($name);
         return array_key_exists($name, $this->rules);
     }
 
@@ -61,6 +74,7 @@ class RulesCollection implements RulesCollectionInterface
      */
     public function getRule($name)
     {
+        $name = strtolower($name);
         if (!$this->hasRule($name)) {
             throw ValitronException::ruleNotFound($name);
         }
