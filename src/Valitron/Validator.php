@@ -72,10 +72,7 @@ class Validator
      */
     protected static $_ruleMessages = array();
 
-    /**
-     * @var array
-     */
-    protected $validUrlPrefixes = array('http://', 'https://', 'ftp://');
+
 
     protected $rules;
     /**
@@ -327,182 +324,13 @@ class Validator
         return strlen($value);
     }
 
-    /**
-     * Validate a field is contained within a list of values
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @param  array  $params
-     * @internal param array $fields
-     * @return bool
-     */
-    protected function validateIn($field, $value, $params)
-    {
-        $isAssoc = array_values($params[0]) !== $params[0];
-        if ($isAssoc) {
-            $params[0] = array_keys($params[0]);
-        }
-
-        $strict = false;
-        if (isset($params[1])) {
-            $strict = $params[1];
-        }
-
-        return in_array($value, $params[0], $strict);
-    }
-
-    /**
-     * Validate a field is not contained within a list of values
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @param  array  $params
-     * @internal param array $fields
-     * @return bool
-     */
-    protected function validateNotIn($field, $value, $params)
-    {
-        return !$this->validateIn($field, $value, $params);
-    }
-
-    /**
-     * Validate a field contains a given string
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @param  array  $params
-     * @return bool
-     */
-    protected function validateContains($field, $value, $params)
-    {
-        if (!isset($params[0])) {
-            return false;
-        }
-        if (!is_string($params[0]) || !is_string($value)) {
-            return false;
-        }
-
-        $strict = true;
-        if (isset($params[1])) {
-            $strict = (bool) $params[1];
-        }
-
-        $isContains = false;
-        if ($strict) {
-            if (function_exists('mb_strpos')) {
-                $isContains = mb_strpos($value, $params[0]) !== false;
-            } else {
-                $isContains = strpos($value, $params[0]) !== false;
-            }
-        } else {
-            if (function_exists('mb_stripos')) {
-                $isContains = mb_stripos($value, $params[0]) !== false;
-            } else {
-                $isContains = stripos($value, $params[0]) !== false;
-            }
-        }
-        return $isContains;
-    }
-
-    /**
-     * Validate that a field is a valid IP address
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @return bool
-     */
-    protected function validateIp($field, $value)
-    {
-        return filter_var($value, \FILTER_VALIDATE_IP) !== false;
-    }
 
 
-    /**
-     * Validate that a field is a valid URL by syntax
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @return bool
-     */
-    protected function validateUrl($field, $value)
-    {
-        foreach ($this->validUrlPrefixes as $prefix) {
-            if (strpos($value, $prefix) !== false) {
-                return filter_var($value, \FILTER_VALIDATE_URL) !== false;
-            }
-        }
 
-        return false;
-    }
 
-    /**
-     * Validate that a field is an active URL by verifying DNS record
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @return bool
-     */
-    protected function validateUrlActive($field, $value)
-    {
-        foreach ($this->validUrlPrefixes as $prefix) {
-            if (strpos($value, $prefix) !== false) {
-                $host = parse_url(strtolower($value), PHP_URL_HOST);
 
-                return checkdnsrr($host, 'A') || checkdnsrr($host, 'AAAA') || checkdnsrr($host, 'CNAME');
-            }
-        }
 
-        return false;
-    }
 
-    /**
-     * Validate that a field contains only alphabetic characters
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @return bool
-     */
-    protected function validateAlpha($field, $value)
-    {
-        return preg_match('/^([a-z])+$/i', $value);
-    }
-
-    /**
-     * Validate that a field contains only alpha-numeric characters
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @return bool
-     */
-    protected function validateAlphaNum($field, $value)
-    {
-        return preg_match('/^([a-z0-9])+$/i', $value);
-    }
-
-    /**
-     * Validate that a field contains only alpha-numeric characters, dashes, and underscores
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @return bool
-     */
-    protected function validateSlug($field, $value)
-    {
-        return preg_match('/^([-a-z0-9_-])+$/i', $value);
-    }
-
-    /**
-     * Validate that a field passes a regular expression check
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @param  array  $params
-     * @return bool
-     */
-    protected function validateRegex($field, $value, $params)
-    {
-        return preg_match($params[0], $value);
-    }
 
     /**
      *  Get array of fields and data
