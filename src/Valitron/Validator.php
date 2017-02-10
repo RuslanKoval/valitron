@@ -328,69 +328,6 @@ class Validator
     }
 
     /**
-     * Validate the size of a field is greater than a minimum value.
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @param  array  $params
-     * @internal param array $fields
-     * @return bool
-     */
-    protected function validateMin($field, $value, $params)
-    {
-        if (!is_numeric($value)) {
-            return false;
-        } elseif (function_exists('bccomp')) {
-            return !(bccomp($params[0], $value, 14) === 1);
-        } else {
-            return $params[0] <= $value;
-        }
-    }
-
-    /**
-     * Validate the size of a field is less than a maximum value
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @param  array  $params
-     * @internal param array $fields
-     * @return bool
-     */
-    protected function validateMax($field, $value, $params)
-    {
-        if (!is_numeric($value)) {
-            return false;
-        } elseif (function_exists('bccomp')) {
-            return !(bccomp($value, $params[0], 14) === 1);
-        } else {
-            return $params[0] >= $value;
-        }
-    }
-
-    /**
-     * Validate the size of a field is between min and max values
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @param  array  $params
-
-     * @return bool
-     */
-    protected function validateBetween($field, $value, $params)
-    {
-        if (!is_numeric($value)) {
-            return false;
-        }
-        if (!isset($params[0]) || !is_array($params[0]) || count($params[0]) !== 2) {
-            return false;
-        }
-
-        list($min, $max) = $params[0];
-
-        return $this->validateMin($field, $value, array($min)) && $this->validateMax($field, $value, array($max));
-    }
-
-    /**
      * Validate a field is contained within a list of values
      *
      * @param  string $field
@@ -1070,7 +1007,9 @@ class Validator
      */
     public function hasValidator($name)
     {
-
+        if ($this->rules->hasRule($name)){
+            return true;
+        }
         $rules = $this->getRules();
         return method_exists($this, "validate" . ucfirst($name)) || isset($rules[$name]);
     }

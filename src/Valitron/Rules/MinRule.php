@@ -7,12 +7,12 @@ namespace Valitron\Rules;
 use Valitron\RuleInterface;
 
 /**
- * Validate that a field is a valid e-mail address
+ * Validate that a field is greater than a minimum value
  *
- * Class EmailRule
+ * Class MinRule
  * @package Valitron\Rules
  */
-class EmailRule implements RuleInterface
+class MinRule implements RuleInterface
 {
 
     /**
@@ -25,6 +25,13 @@ class EmailRule implements RuleInterface
      */
     public function validate($field, $value, $params = array(), $data = array())
     {
-        return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
+
+        if (!is_numeric($value)) {
+            return false;
+        } elseif (function_exists('bccomp')) {
+            return !(bccomp($params[0], $value, 14) === 1);
+        } else {
+            return $params[0] <= $value;
+        }
     }
 }

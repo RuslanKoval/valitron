@@ -9,10 +9,14 @@ use Valitron\Exception\ValitronException;
 class RulesCollection implements RulesCollectionInterface
 {
 
-    private $rules = [
-        'email'=>'\Valitron\Rules\EmailRule'
-    ];
-
+    private $rules = array(
+        //numeric
+        'min' => '\Valitron\Rules\MinRule',
+        'max' => '\Valitron\Rules\MaxRule',
+        'between' => '\Valitron\Rules\BetweenRule',
+        //string
+        'email' => '\Valitron\Rules\EmailRule'
+    );
 
 
     /**
