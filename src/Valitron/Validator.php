@@ -105,7 +105,7 @@ class Validator
             throw new \InvalidArgumentException("Fail to load language file '" . $langFile . "'");
         }
 
-        $this->rules = new RulesCollection();
+        $this->rules = new DefaultRules();
     }
 
     /**
@@ -137,118 +137,6 @@ class Validator
 
         return static::$_langDir ?: dirname(dirname(__DIR__)) . '/lang';
     }
-
-    /**
-     * Required field validator
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @return bool
-     */
-    protected function validateRequired($field, $value)
-    {
-        if (is_null($value)) {
-            return false;
-        } elseif (is_string($value) && trim($value) === '') {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Validate that two values match
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @param  array  $params
-     * @internal param array $fields
-     * @return bool
-     */
-    protected function validateEquals($field, $value, array $params)
-    {
-        $field2 = $params[0];
-
-        return isset($this->_fields[$field2]) && $value == $this->_fields[$field2];
-    }
-
-    /**
-     * Validate that a field is different from another field
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @param  array  $params
-     * @internal param array $fields
-     * @return bool
-     */
-    protected function validateDifferent($field, $value, array $params)
-    {
-        $field2 = $params[0];
-
-        return isset($this->_fields[$field2]) && $value != $this->_fields[$field2];
-    }
-
-    /**
-     * Validate that a field was "accepted" (based on PHP's string evaluation rules)
-     *
-     * This validation rule implies the field is "required"
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @return bool
-     */
-    protected function validateAccepted($field, $value)
-    {
-        $acceptable = array('yes', 'on', 1, '1', true);
-
-        return $this->validateRequired($field, $value) && in_array($value, $acceptable, true);
-    }
-
-    /**
-     * Validate that a field is an array
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @return bool
-     */
-    protected function validateArray($field, $value)
-    {
-        return is_array($value);
-    }
-
-    /**
-     * Validate that a field is numeric
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @return bool
-     */
-    protected function validateNumeric($field, $value)
-    {
-        return is_numeric($value);
-    }
-
-    /**
-     * Validate that a field is an integer
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @return bool
-     */
-    protected function validateInteger($field, $value)
-    {
-        return filter_var($value, \FILTER_VALIDATE_INT) !== false;
-    }
-
-
-
-
-
-
-
-
-
-
 
 
 
