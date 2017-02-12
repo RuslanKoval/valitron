@@ -16,6 +16,10 @@ class RulesCollection implements RulesCollectionInterface
         'between' => '\Valitron\Rules\BetweenRule',
 
         //string
+        'length' => '\Valitron\Rules\LengthRule',
+        'lengthmin' => '\Valitron\Rules\LengthMinRule',
+        'lengthmax' => '\Valitron\Rules\LengthMaxRule',
+        'lengthbetween' => '\Valitron\Rules\LengthBetweenRule',
         'email' => '\Valitron\Rules\EmailRule',
         'creditcard' => '\Valitron\Rules\CreditCardRule',
         'regex' => '\Valitron\Rules\RegexRule',

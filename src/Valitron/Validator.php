@@ -240,89 +240,9 @@ class Validator
         return filter_var($value, \FILTER_VALIDATE_INT) !== false;
     }
 
-    /**
-     * Validate the length of a string
-     *
-     * @param  string $field
-     * @param  mixed  $value
-     * @param  array  $params
-     * @internal param array $fields
-     * @return bool
-     */
-    protected function validateLength($field, $value, $params)
-    {
-        $length = $this->stringLength($value);
-        // Length between
-        if (isset($params[1])) {
-            return $length >= $params[0] && $length <= $params[1];
-        }
-        // Length same
-        return ($length !== false) && $length == $params[0];
-    }
 
-    /**
-     * Validate the length of a string (between)
-     *
-     * @param  string  $field
-     * @param  mixed   $value
-     * @param  array   $params
-     * @return boolean
-     */
-    protected function validateLengthBetween($field, $value, $params)
-    {
-        $length = $this->stringLength($value);
 
-        return ($length !== false) && $length >= $params[0] && $length <= $params[1];
-    }
 
-    /**
-     * Validate the length of a string (min)
-     *
-     * @param string $field
-     * @param mixed  $value
-     * @param array  $params
-     *
-     * @return boolean
-     */
-    protected function validateLengthMin($field, $value, $params)
-    {
-        $length = $this->stringLength($value);
-
-        return ($length !== false) && $length >= $params[0];
-    }
-
-    /**
-     * Validate the length of a string (max)
-     *
-     * @param string $field
-     * @param mixed  $value
-     * @param array  $params
-     *
-     * @return boolean
-     */
-    protected function validateLengthMax($field, $value, $params)
-    {
-        $length = $this->stringLength($value);
-
-        return ($length !== false) && $length <= $params[0];
-    }
-
-    /**
-     * Get the length of a string
-     *
-     * @param  string $value
-     * @return int|false
-     */
-    protected function stringLength($value)
-    {
-        if (!is_string($value)) {
-            return false;
-        } elseif (function_exists('mb_strlen')) {
-            return mb_strlen($value);
-        }
-
-        return strlen($value);
-    }
 
 
 
