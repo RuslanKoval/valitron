@@ -13,25 +13,7 @@ use Valitron\RuleInterface;
  */
 class BetweenRule implements RuleInterface
 {
-    private $min;
-    private $max;
-
-    private function validateMin($field, $value, $min)
-    {
-        if (is_null($this->min)) {
-            $this->min = new MinRule();
-        }
-        return $this->min->validate($field, $value, array($min));
-    }
-
-    private function validateMax($field, $value, $max)
-    {
-        if (is_null($this->max)) {
-            $this->max = new MaxRule();
-        }
-        return $this->max->validate($field, $value, array($max));
-    }
-
+    
     /**
      * Run validation and return boolean result
      *
@@ -54,6 +36,6 @@ class BetweenRule implements RuleInterface
 
         list($min, $max) = $params[0];
 
-        return $this->validateMin($field, $value, $min) && $this->validateMax($field, $value, $max);
+        return $validator->validateMin($field, $value, array($min)) && $validator->validateMax($field, $value, array($max));
     }
 }
