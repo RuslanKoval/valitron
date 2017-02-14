@@ -608,9 +608,9 @@ class Validator
     {
         $name = strtolower($name);
         if (substr($name, 0, 8) === 'validate' && $this->rules->hasRule(substr($name, 8))) {
-            $arguments += [
-                null, null, array(), array(), $this
-            ];
+            $arguments = $arguments + [
+                    null, null, array(), array(), $this
+                ];
 
             $rule = $this->rules->getRule(substr($name, 8));
             return call_user_func_array([$rule, 'validate'], $arguments);
