@@ -613,7 +613,7 @@ class Validator
             );
 
             $rule = $this->rules->getRule(substr($name, 8));
-            return call_user_func_array([$rule, 'validate'], $arguments);
+            return call_user_func_array(array($rule, 'validate'), $arguments);
         }
     }
 }
